@@ -2,6 +2,10 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.*;
+import java.util.regex.*;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -32,8 +36,22 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTimes(String inputName, String outputName) throws FileNotFoundException {
+
+        File inputFile = new File(inputName);
+        File outputFile = new File(outputName);
+        Scanner scanner = new Scanner(inputFile);
+        PrintWriter printWriter = new PrintWriter(outputFile);
+
+        List<String> lines = new ArrayList<>();
+        while (scanner.hasNextLine()) lines.add(scanner.nextLine());
+
+        Collections.sort(lines);
+
+        for (String line: lines) printWriter.println(line);
+
+        scanner.close();
+        printWriter.close();
     }
 
     /**
@@ -62,8 +80,44 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortAddresses(String inputName, String outputName) throws FileNotFoundException {
+
+        File inputFile = new File(inputName);
+        File outputFile = new File(outputName);
+        Scanner scanner = new Scanner(inputFile);
+        PrintWriter printWriter = new PrintWriter(outputFile);
+
+        Pattern pattern = Pattern.compile("(([A-Za-zА-Яа-я]+\\s?)+)\\s-\\s(([A-Za-zА-Яа-я]+\\s?)+\\d+)");
+        Matcher matcher;
+
+        Map<String, TreeSet<String>> base = new TreeMap<>();
+
+        while (scanner.hasNextLine()){
+            String line = scanner.nextLine();
+            matcher = pattern.matcher(line);
+            String name = matcher.group(1);
+            String address = matcher.group(3);
+
+            if (!base.containsKey(address)){
+                TreeSet<String> names = new TreeSet<>();
+                names.add(name);
+                base.put(address, names);
+            } else base.get(address).add(name);
+        }
+
+        Object[] addresses = base.keySet().toArray();
+
+        for (int i=0; i < base.size(); i++){
+            printWriter.print(addresses[i].toString() + " - ");
+
+            Object[] names = base.get(addresses[i].toString()).toArray();
+            for (int j=0; j < names.length-1; j++){
+                printWriter.print(names[j].toString() + ", ");
+            }
+            printWriter.println(names[names.length-1]);
+        }
+
+        // РЕГЕКС, КИРИЛЛИЦА И КОДИРОВКА ТЕКСТОВОГО ФАЙЛА ОРТОГОНАЛЬНЫ :С
     }
 
     /**
@@ -96,8 +150,25 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws FileNotFoundException {
+
+        File inputFile = new File(inputName);
+        File outputFile = new File(outputName);
+        Scanner scanner = new Scanner(inputFile);
+        PrintWriter printWriter = new PrintWriter(outputFile);
+
+        List<Double> temperatures = new ArrayList<>();
+        while (scanner.hasNextLine()){
+            String str = scanner.nextLine();
+            temperatures.add(Double.parseDouble(str));
+        }
+
+        Collections.sort(temperatures);
+
+        for (Double temperature: temperatures) printWriter.println(temperature);
+
+        scanner.close();
+        printWriter.close();
     }
 
     /**
