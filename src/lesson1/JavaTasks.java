@@ -87,7 +87,10 @@ public class JavaTasks {
         Scanner scanner = new Scanner(inputFile);
         PrintWriter printWriter = new PrintWriter(outputFile);
 
-        Pattern pattern = Pattern.compile("(([A-Za-zА-Яа-я]+\\s?)+)\\s-\\s(([A-Za-zА-Яа-я]+\\s?)+\\d+)");
+        // регекс теоретически работает, проверено несколькими сервисами
+        // но почему он не находит совпадения в инпут файле? кодировка файла?
+        Pattern pattern = Pattern.compile(
+                "(([A-Za-zА-Яа-яЁё]+\\s?)+)\\s-\\s(([A-Za-zА-Яа-яЁё]+\\s?)+\\d+)");
         Matcher matcher;
 
         Map<String, TreeSet<String>> base = new TreeMap<>();
@@ -116,8 +119,6 @@ public class JavaTasks {
             }
             printWriter.println(names[names.length-1]);
         }
-
-        // РЕГЕКС, КИРИЛЛИЦА И КОДИРОВКА ТЕКСТОВОГО ФАЙЛА ОРТОГОНАЛЬНЫ :С
     }
 
     /**
@@ -200,7 +201,26 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
+    static public void sortSequence(String inputName, String outputName) throws FileNotFoundException {
+
+        File inputFile = new File(inputName);
+        File outputFile = new File(outputName);
+        Scanner scanner = new Scanner(inputFile);
+        PrintWriter printWriter = new PrintWriter(outputFile);
+
+        List<Integer> nums = new LinkedList<>();
+        Map<Integer, Integer> map = new TreeMap<>();
+
+        while (scanner.hasNextInt()){
+            int num = scanner.nextInt();
+            if (map.containsKey(num)){
+                int value = map.get(num) + 1;
+                map.put(num, value);
+            } else map.put(num, 1);
+        }
+
+
+
         throw new NotImplementedError();
     }
 
