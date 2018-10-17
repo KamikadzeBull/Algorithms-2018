@@ -36,6 +36,8 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+
+    // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА СОРТИРОВКИ СЛИЯНИЯМИ
     static public void sortTimes(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -80,6 +82,8 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
+
+    // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА TREESET, TREEMAP
     static public void sortAddresses(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -119,6 +123,11 @@ public class JavaTasks {
             }
             printWriter.println(names[names.length-1]);
         }
+
+        scanner.close();
+        printWriter.close();
+
+        throw new NotImplementedError();
     }
 
     /**
@@ -151,6 +160,8 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
+
+    // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА СОРТИРОВКИ СЛИЯНИЯМИ
     static public void sortTemperatures(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -201,6 +212,8 @@ public class JavaTasks {
      * 2
      * 2
      */
+
+    // ТРУДОЕМКОСТЬ O(N^2) ИЗ-ЗА НЕЛИНЕЙНОСТИ В СЛУЧАЕ С УДАЛЕНИЕМ ЭЛЕМЕНТОВ
     static public void sortSequence(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -208,20 +221,44 @@ public class JavaTasks {
         Scanner scanner = new Scanner(inputFile);
         PrintWriter printWriter = new PrintWriter(outputFile);
 
-        List<Integer> nums = new LinkedList<>();
+        List<Integer> list = new LinkedList<>();
         Map<Integer, Integer> map = new TreeMap<>();
 
         while (scanner.hasNextInt()){
-            int num = scanner.nextInt();
-            if (map.containsKey(num)){
-                int value = map.get(num) + 1;
-                map.put(num, value);
-            } else map.put(num, 1);
+            int a = scanner.nextInt();
+            list.add(a);
+            if (!map.containsKey(a)){
+                map.put(a,1);
+            } else {
+                int i = map.get(a) + 1;
+                map.put(a,i);
+            }
         }
 
+        int max = 0;    // max frequency
+        int min = -1;   // min value with max frequency
+        for (Map.Entry<Integer, Integer> entry: map.entrySet()){
+            if (entry.getValue() > max){
+                min = entry.getKey();
+                max = entry.getValue();
+            }
+        }
 
+        int i = 0;
+        while (i < list.size()){
+            if (list.get(i) == min){
+                list.remove(i);
+            } else i++;
+        }
+        for (i = 0; i < max; i++) {
+            list.add(min);
+        }
+        for (int a: list) {
+            printWriter.println(a);
+        }
 
-        throw new NotImplementedError();
+        scanner.close();
+        printWriter.close();
     }
 
     /**
