@@ -38,6 +38,7 @@ public class JavaTasks {
      */
 
     // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА СОРТИРОВКИ СЛИЯНИЯМИ
+    // РЕСУРСОЕМКОСТЬ O(N)
     static public void sortTimes(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -84,6 +85,7 @@ public class JavaTasks {
      */
 
     // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА TREESET, TREEMAP
+    // РЕСУРСОЕМКОСТЬ O(N)
     static public void sortAddresses(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -162,6 +164,7 @@ public class JavaTasks {
      */
 
     // ТРУДОЕМКОСТЬ O(Nlog(N)) ИЗ-ЗА СОРТИРОВКИ СЛИЯНИЯМИ
+    // РЕСУРСОЕМКОСТЬ O(N)
     static public void sortTemperatures(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -213,7 +216,8 @@ public class JavaTasks {
      * 2
      */
 
-    // ТРУДОЕМКОСТЬ O(N^2) ИЗ-ЗА НЕЛИНЕЙНОСТИ В СЛУЧАЕ С УДАЛЕНИЕМ ЭЛЕМЕНТОВ
+    // ТРУДОЕМКОСТЬ O(N), ЛИНЕЙНОЕ ДОБАВЛЕНИЕ ЭЛЕМЕНТОВ
+    // РЕСУРСОЕМКОСТЬ O(N)
     static public void sortSequence(String inputName, String outputName) throws FileNotFoundException {
 
         File inputFile = new File(inputName);
@@ -221,12 +225,11 @@ public class JavaTasks {
         Scanner scanner = new Scanner(inputFile);
         PrintWriter printWriter = new PrintWriter(outputFile);
 
-        List<Integer> list = new LinkedList<>();
+        List<Integer> list = new ArrayList<>();
         Map<Integer, Integer> map = new TreeMap<>();
 
         while (scanner.hasNextInt()){
             int a = scanner.nextInt();
-            list.add(a);
             if (!map.containsKey(a)){
                 map.put(a,1);
             } else {
@@ -234,6 +237,7 @@ public class JavaTasks {
                 map.put(a,i);
             }
         }
+        scanner.close();
 
         int max = 0;    // max frequency
         int min = -1;   // min value with max frequency
@@ -244,13 +248,12 @@ public class JavaTasks {
             }
         }
 
-        int i = 0;
-        while (i < list.size()){
-            if (list.get(i) == min){
-                list.remove(i);
-            } else i++;
+        scanner = new Scanner(inputFile);
+        while (scanner.hasNextInt()){
+            int a = scanner.nextInt();
+            if (a != min) list.add(a);
         }
-        for (i = 0; i < max; i++) {
+        for (int i = 0; i < max; i++) {
             list.add(min);
         }
         for (int a: list) {
