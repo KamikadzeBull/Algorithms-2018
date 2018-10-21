@@ -3,7 +3,10 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
-import java.util.Set;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -31,8 +34,30 @@ public class JavaAlgorithms {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        throw new NotImplementedError();
+
+    // ТРУДОЕМКОСТЬ O(N^2)
+    // РЕСУРСКОЕМКОСТЬ O(N)
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws FileNotFoundException {
+
+        File inputFile = new File(inputName);
+        Scanner scanner = new Scanner(inputFile);
+        List<Integer> list = new ArrayList<>();
+
+        while (scanner.hasNextInt())
+            list.add(scanner.nextInt());
+        int d = 0;
+        int min = 1;
+        int max = 2;
+        for (int i = 0; i < list.size()-1; i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                if (list.get(j) - list.get(i) > d) {
+                    min = i + 1;
+                    max = j + 1;
+                    d = list.get(j) - list.get(i);
+                }
+            }
+        }
+        return new Pair<>(min, max);
     }
 
     /**
@@ -81,8 +106,16 @@ public class JavaAlgorithms {
      * Х   Х
      * Х х Х
      */
+
+    // ТРУДОЕМКОСТЬ O(N)
+    // РЕСУРСОЕМКОСТЬ O(1)
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+
+        int index = 0;
+        for (int i = 1; i <= menNumber; i++) {
+            index = (index + choiceInterval) % i;
+        }
+        return index+1;
     }
 
     /**
