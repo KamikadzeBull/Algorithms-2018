@@ -39,6 +39,12 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        try {
+            sortTimes("input/time_in000000.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/time_out000000.txt").readLines().joinToString(separator = "\n"))
+        } finally {
+            File("temp.txt").delete()
+        }
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
@@ -52,6 +58,12 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     Садовая 5 - Сидоров Петр, Сидорова Мария
                 """.trimIndent()
             )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortAddresses("input/addr_in000000.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/addr_out000000.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
         }
@@ -95,6 +107,12 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                     121.3
                 """.trimIndent()
             )
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTemperatures("input/temp_in000000.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/temp_out000000.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
         }
@@ -147,6 +165,12 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                         12
                         12
                     """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortSequence("input/seq_in000000.txt", "temp.txt")
+            assertFileContent("temp.txt", File("input/seq_out000000.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
         }
