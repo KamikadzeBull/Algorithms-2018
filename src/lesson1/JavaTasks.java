@@ -93,8 +93,6 @@ public class JavaTasks {
         Scanner scanner = new Scanner(inputFile);
         PrintWriter printWriter = new PrintWriter(outputFile);
 
-        // регекс теоретически работает, проверено несколькими сервисами
-        // но почему он не находит совпадения в инпут файле? кодировка файла?
         Pattern pattern = Pattern.compile(
                 "(([A-Za-zА-Яа-яЁё]+\\s?)+)\\s-\\s(([A-Za-zА-Яа-яЁё]+\\s?)+\\d+)");
         Matcher matcher;
@@ -104,8 +102,11 @@ public class JavaTasks {
         while (scanner.hasNextLine()){
             String line = scanner.nextLine();
             matcher = pattern.matcher(line);
-            String name = matcher.group(1);
-            String address = matcher.group(3);
+            String name = "", address = "";
+            if (matcher.matches()) {
+                name = matcher.group(1);
+                address = matcher.group(3);
+            }
 
             if (!base.containsKey(address)){
                 TreeSet<String> names = new TreeSet<>();
@@ -128,8 +129,6 @@ public class JavaTasks {
 
         scanner.close();
         printWriter.close();
-
-        throw new NotImplementedError();
     }
 
     /**
