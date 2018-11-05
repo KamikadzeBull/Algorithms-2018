@@ -27,7 +27,7 @@ public class JavaAlgorithms {
      * 185
      *
      * Выбрать два момента времени, первый из них для покупки акций, а второй для продажи, с тем, чтобы разница
-     * между ценой продажи и ценой покупки была максимально большой. Второй момент должен быть раньше первого.
+     * между ценой продажи и ценой покупки была максимально большой. Первый момент должен быть раньше второго.
      * Вернуть пару из двух моментов.
      * Каждый момент обозначается целым числом -- номер строки во входном файле, нумерация с единицы.
      * Например, для приведённого выше файла результат должен быть Pair(3, 4)
@@ -42,22 +42,33 @@ public class JavaAlgorithms {
         File inputFile = new File(inputName);
         Scanner scanner = new Scanner(inputFile);
         List<Integer> list = new ArrayList<>();
+        List<Pair<Integer, Integer>> mins = new ArrayList<>();
+        List<Pair<Integer, Integer>> maxs = new ArrayList<>();
 
-        while (scanner.hasNextInt())
-            list.add(scanner.nextInt());
-        int d = 0;
-        int min = 1;
-        int max = 2;
-        for (int i = 0; i < list.size()-1; i++) {
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(j) - list.get(i) > d) {
-                    min = i + 1;
-                    max = j + 1;
-                    d = list.get(j) - list.get(i);
+        while (scanner.hasNextInt()) list.add(scanner.nextInt());
+
+        if (list.get(1) - list.get(0) > 0)
+            mins.add(new Pair<>(list.get(0), 0));
+        for (int i = 1; i < list.size()-1; i++){
+            if (list.get(i+1) - list.get(i) > 0 && list.get(i) - list.get(i-1) < 0)
+                mins.add(new Pair<>(list.get(i), i));
+            else if (list.get(i+1) - list.get(i) < 0 && list.get(i) - list.get(i-1) > 0)
+                maxs.add(new Pair<>(list.get(i), i));
+        }
+
+        int firstTime = 0, secondTime = 1, d = 0;
+
+        for (Pair<Integer, Integer> min : mins){
+            for (Pair<Integer, Integer> max : maxs){
+                if (max.getFirst() - min.getFirst() > d && max.getSecond() > min.getSecond()){
+                    d = max.getFirst() - min.getFirst();
+                    firstTime = min.getSecond();
+                    secondTime = max.getSecond();
                 }
             }
         }
-        return new Pair<>(min, max);
+
+        return new Pair<>(firstTime+1, secondTime+1);
     }
 
     /**
@@ -129,8 +140,48 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
+
+    // ТРУДОЕМКОСТЬ O(M*N)
+    // РЕСУРСОЕМКОСТЬ O(1)
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+
+        String sub = "";
+        StringBuilder sub1 = new StringBuilder();
+
+        int i = 0;
+        while (i < firs.length()){
+            int j = 0;
+            if (sub.length() > firs.length() - i+1 || sub.length() > second.length() - j+1)
+                break;
+            while (j < second.length()){
+                if (sub.length() > firs.length() - i+1 || sub.length() > second.length() - j+1)
+                    break;
+                if (firs.charAt(i) == second.charAt(j)){
+                    sub1.append(firs.charAt(i));
+                    int lastI = i;
+                    int lastJ = j;
+                    for (i += 1, j += 1; i < firs.length() && j < second.length(); i++, j++){
+                        if (firs.charAt(i) == second.charAt(j)){
+                            sub1.append(firs.charAt(i));
+                            if (i == firs.length()-1 || j == second.length()-1){
+                                if (sub1.length() > sub.length()) sub = sub1.toString();
+                                sub1 = new StringBuilder();
+                                break;
+                            }
+                        } else {
+                            if (sub1.length() > sub.length()) sub = sub1.toString();
+                            sub1 = new StringBuilder();
+                            break;
+                        }
+                    }
+                    i = lastI;
+                    j = lastJ;
+                }
+                j++;
+            }
+            i++;
+        }
+        return sub;
     }
 
     /**
@@ -143,8 +194,25 @@ public class JavaAlgorithms {
      * Справка: простым считается число, которое делится нацело только на 1 и на себя.
      * Единица простым числом не считается.
      */
+
+    // ТРУДОЕМКОСТЬ O(N*sqrt(N))
+    // РЕСУРСОЕМКОСТЬ O(1)
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+
+        int amount = 0;
+        boolean f;
+        if (limit >= 2) {
+            for (int num = 2; num <= limit; num++){
+                f = true;
+                for (int i = 2; i <= Math.sqrt(num); i++)
+                    if (num % i == 0) {
+                        f = false;
+                        break;
+                    }
+                if (f) amount++;
+            }
+        }
+        return amount;
     }
 
     /**
