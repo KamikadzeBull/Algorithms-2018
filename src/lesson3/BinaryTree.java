@@ -11,7 +11,7 @@ import java.util.*;
 public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
 
     private static class Node<T> {
-        final T value;
+        T value;
 
         Node<T> left = null;
 
@@ -64,10 +64,54 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Удаление элемента в дереве
      * Средняя
      */
+
+    // ТРУДОЕМКОСТЬ O(logN)
+    // РЕСУРСОЕМКОСТЬ O(1)
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (root == null) return false;
+        @SuppressWarnings("unchecked")
+        T title = (T) o;
+        Node<T> result = delete(root, title);
+        size--;
+        return result != null;
+    }
+
+    private Node<T> delete(Node<T> node, T t) {
+        Node<T> current = node;
+        int comparison = t.compareTo(current.value);
+        if (comparison < 0) {
+            current.left = delete(current.left, t);
+        } else if (comparison > 0) {
+            current.right = delete(current.right, t);
+        } else if (current.right != null) {
+            current.value = minimum(current.right).value;
+            current.right = delete(current.right, current.value);
+        } else {
+            if (current.left != null) {
+                current.value = maximum(current.left).value;
+                current.left = delete(current.left, current.value);
+            } else {
+                current = null;
+            }
+        }
+        return current;
+    }
+
+    private Node<T> minimum(Node<T> node) {
+        if (node.left == null) return node;
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    private Node<T> maximum(Node<T> node) {
+        if (node.right == null) return node;
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
     }
 
     @Override
@@ -102,15 +146,25 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
-        private BinaryTreeIterator() {}
+        private Deque<Node<T>> list = new LinkedList<>();
+
+        private BinaryTreeIterator() {
+            current = root;
+            while (current != null) {
+                list.push(current);
+                current = current.left;
+            }
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+
+        // ТРУДОЕМКОСТЬ O(1)
+        // РЕСУРСОЕМКОСТЬ O(N)
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            return list.pop();
         }
 
         @Override
@@ -129,10 +183,16 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Удаление следующего элемента
          * Сложная
          */
+
+        // ТРУДОЕМКОСТЬ O(logN)
+        // РЕСУРСОЕМКОСТЬ O(N)
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (current != null) {
+                Node<T> node = current;
+                current = findNext();
+                BinaryTree.this.remove(node);
+            }
         }
     }
 
