@@ -14,6 +14,8 @@ class Path private constructor(
 
     operator fun contains(v: Vertex) = v in vertices
 
+    constructor(list: List<Vertex>) : this(list, list.size - 1)
+
     constructor(first: Vertex) : this(listOf(first), 0)
 
     constructor(previous: Path, g: Graph, next: Vertex) :
